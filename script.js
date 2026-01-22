@@ -490,6 +490,123 @@ let gameSettings = {
 };
 
 // ============================================================================
+// ANSWER VALIDATION FUNCTIONS
+// ============================================================================
+
+/**
+ * Normalize a string for comparison (lowercase, remove extra spaces, punctuation)
+ */
+function normalizeString(str) {
+  return str
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s]/g, '') // Remove punctuation
+    .replace(/\s+/g, ' ');   // Normalize spaces
+}
+
+/**
+ * Check if two strings are similar using flexible matching
+ */
+function isSimilarString(userAnswer, correctAnswer) {
+  const normalizedUser = normalizeString(userAnswer);
+  const normalizedCorrect = normalizeString(correctAnswer);
+  
+  // Exact match after normalization
+  if (normalizedUser === normalizedCorrect) {
+    return true;
+  }
+  
+  // Common variations for special characters
+  const variations = {
+    "and": ["&", "and", "n"],
+    "acdc": ["ac/dc", "ac dc", "acdc"],
+    "gnr": ["guns n roses", "guns n' roses", "guns and roses", "gnr"],
+    "spongebob": ["spongebob squarepants", "spongebob"],
+    "harry potter": ["harry potter"],
+    "elvis": ["elvis presley", "elvis"],
+    "michael jackson": ["michael jackson", "mj"],
+    "queen": ["queen"],
+    "teenage mutant ninja turtles": ["teenage mutant ninja turtles", "tmnt", "ninja turtles"],
+    "the lion king": ["the lion king", "lion king"],
+    "the legend of zelda": ["the legend of zelda", "legend of zelda", "zelda"],
+  };
+  
+  // Check if user answer matches any variation of the correct answer
+  for (const [correctKey, variationsList] of Object.entries(variations)) {
+    if (variationsList.includes(normalizedUser) && normalizedCorrect.includes(correctKey)) {
+      return true;
+    }
+    if (variationsList.includes(normalizedCorrect) && normalizedUser.includes(correctKey)) {
+      return true;
+    }
+  }
+  
+  // Check if user answer is contained in correct answer or vice versa
+  if (normalizedCorrect.includes(normalizedUser) && normalizedUser.length >= 3) {
+    return true;
+  }
+  
+  if (normalizedUser.includes(normalizedCorrect) && normalizedCorrect.length >= 3) {
+    return true;
+  }
+  
+  // Calculate similarity using Levenshtein distance for typos
+  const similarity = calculateSimilarity(normalizedUser, normalizedCorrect);
+  return similarity >= 0.8; // 80% similarity threshold
+}
+
+/**
+ * Calculate similarity between two strings (0 to 1)
+ */
+function calculateSimilarity(str1, str2) {
+  const longer = str1.length > str2.length ? str1 : str2;
+  const shorter = str1.length > str2.length ? str2 : str1;
+  
+  if (longer.length === 0) return 1.0;
+  
+  // Simple similarity calculation
+  let matches = 0;
+  const shorterWords = shorter.split(' ');
+  const longerWords = longer.split(' ');
+  
+  for (const word of shorterWords) {
+    if (word.length < 3) continue; // Skip very short words
+    
+    for (const longerWord of longerWords) {
+      if (longerWord.includes(word) || word.includes(longerWord)) {
+        matches++;
+        break;
+      }
+    }
+  }
+  
+  return matches / Math.max(shorterWords.length, longerWords.length);
+}
+
+/**
+ * Validate user answer with flexible matching
+ */
+function validateAnswer(userAnswer, correctAnswer, artist = '', answerType = 'song') {
+  const normalizedUser = normalizeString(userAnswer);
+  const normalizedCorrect = normalizeString(correctAnswer);
+  const normalizedArtist = artist ? normalizeString(artist) : '';
+  
+  // Handle different answer types
+  if (answerType === 'both') {
+    // For "both" type, check if answer contains both song and artist
+    const hasSong = isSimilarString(userAnswer, correctAnswer);
+    const hasArtist = normalizedArtist && isSimilarString(userAnswer, artist);
+    return hasSong && hasArtist;
+  } else if (answerType === 'artist') {
+    // For "artist" type, check artist name
+    return isSimilarString(userAnswer, artist || correctAnswer);
+  } else {
+    // For "song", "title", "character", "dish" types
+    return isSimilarString(userAnswer, correctAnswer);
+  }
+}
+
+// ============================================================================
 // DOM ELEMENTS
 // ============================================================================
 
@@ -765,72 +882,83 @@ function getGenreDescription(genreKey) {
 
 /**
  * Set up the back button handler for mobile devices
+ * FIXED VERSION: Simpler approach that works on GitHub Pages
  */
 function setupBackButtonHandler() {
-  // Track the current screen state
-  let currentScreen = 'welcome';
+  // Store original screen states
+  let isWelcomeScreen = true;
+  let isGameScreen = false;
+  let isResultsScreen = false;
   
-  // Listen for back button events
+  // Add event listener for back/forward navigation
   window.addEventListener('popstate', function(event) {
-    // If we're on the welcome screen, let the back button work normally
-    if (currentScreen === 'welcome') {
-      return; // Allow normal back navigation
+    // If user presses back button and we're in game or results
+    if (isGameScreen || isResultsScreen) {
+      // Show the confirmation modal
+      showBackModal();
+      // Push the state back to prevent leaving
+      if (event.state && event.state.screen) {
+        history.pushState({ screen: event.state.screen }, null, '');
+      }
     }
-    
-    // If we're in game or results, go back to welcome screen
-    goBackToHome();
-    
-    // Push a new state to prevent further back navigation
-    history.pushState({ screen: 'welcome' }, null, window.location.pathname);
   });
   
-  // Update screen tracking when screens change
+  // Override the screen-changing functions to update our state
   const originalStartGame = startGame;
   startGame = function(genreKey) {
-    currentScreen = 'game';
-    history.pushState({ screen: 'game' }, null, window.location.pathname);
+    isWelcomeScreen = false;
+    isGameScreen = true;
+    isResultsScreen = false;
+    
+    // Only push state if we're not already in that state
+    if (!history.state || history.state.screen !== 'game') {
+      history.pushState({ screen: 'game' }, null, '');
+    }
+    
     return originalStartGame(genreKey);
   };
   
   const originalEndGame = endGame;
   endGame = function() {
-    currentScreen = 'results';
-    history.pushState({ screen: 'results' }, null, window.location.pathname);
+    isWelcomeScreen = false;
+    isGameScreen = false;
+    isResultsScreen = true;
+    
+    // Only push state if we're not already in that state
+    if (!history.state || history.state.screen !== 'results') {
+      history.pushState({ screen: 'results' }, null, '');
+    }
+    
     return originalEndGame();
   };
   
-  // Override the goBackToGenreSelection function
+  // Override functions that return to welcome screen
   const originalGoBackToGenreSelection = goBackToGenreSelection;
   goBackToGenreSelection = function() {
-    currentScreen = 'welcome';
-    history.replaceState({ screen: 'welcome' }, null, window.location.pathname);
+    isWelcomeScreen = true;
+    isGameScreen = false;
+    isResultsScreen = false;
+    
+    // Replace state to avoid back button issues
+    history.replaceState({ screen: 'welcome' }, null, '');
+    
     return originalGoBackToGenreSelection();
   };
   
-  // Override the quitGameWithoutConfirm function
   const originalQuitGameWithoutConfirm = quitGameWithoutConfirm;
   quitGameWithoutConfirm = function() {
-    currentScreen = 'welcome';
-    history.replaceState({ screen: 'welcome' }, null, window.location.pathname);
+    isWelcomeScreen = true;
+    isGameScreen = false;
+    isResultsScreen = false;
+    
+    // Replace state to avoid back button issues
+    history.replaceState({ screen: 'welcome' }, null, '');
+    
     return originalQuitGameWithoutConfirm();
   };
   
-  // Push initial state
-  history.replaceState({ screen: 'welcome' }, null, window.location.pathname);
-}
-
-/**
- * Go back to home screen from back button
- */
-function goBackToHome() {
-  // Check if we're in game or results screen
-  const isGameActive = !gameScreen.classList.contains('hidden');
-  const isResultsActive = !resultsScreen.classList.contains('hidden');
-  
-  if (isGameActive || isResultsActive) {
-    // Show the back button modal instead of directly quitting
-    showBackModal();
-  }
+  // Initialize with welcome screen state
+  history.replaceState({ screen: 'welcome' }, null, '');
 }
 
 /**
@@ -1149,28 +1277,20 @@ function loadQuestion() {
  * Check the user's answer
  */
 function checkAnswer() {
-  const userAnswer = answerInput.value.trim().toLowerCase();
+  const userAnswer = answerInput.value.trim();
   if (!userAnswer) return;
   
   const currentQuestionData = gameState.currentQuestions[gameState.currentQuestionIndex];
-  const correctAnswer = currentQuestionData.answer.toLowerCase();
-  const correctArtist = currentQuestionData.artist ? currentQuestionData.artist.toLowerCase() : '';
+  const correctAnswer = currentQuestionData.answer;
+  const correctArtist = currentQuestionData.artist || '';
   
-  let isCorrect = false;
-  
-  // Check answer based on answerType
-  if (gameState.currentGenre === 'music' && currentQuestionData.answerType === 'both') {
-    // For "both" type, check if answer contains both song and artist
-    const hasSong = userAnswer.includes(correctAnswer);
-    const hasArtist = correctArtist && userAnswer.includes(correctArtist);
-    isCorrect = hasSong && hasArtist;
-  } else if (gameState.currentGenre === 'music' && currentQuestionData.answerType === 'artist') {
-    // For "artist" type, check artist name
-    isCorrect = userAnswer === correctArtist;
-  } else {
-    // For "song" type or non-music questions
-    isCorrect = userAnswer === correctAnswer;
-  }
+  // Use the new flexible validation function
+  const isCorrect = validateAnswer(
+    userAnswer, 
+    correctAnswer, 
+    correctArtist, 
+    currentQuestionData.answerType
+  );
   
   // Store result for scorecard
   gameState.answeredQuestions.push({
