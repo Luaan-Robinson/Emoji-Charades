@@ -32,8 +32,8 @@ const gameData = {
           answer: "Smooth Criminal",
           artist: "Michael Jackson",
           hints: [
-            "This song asks 'Annie, are you okay?'",
-            "Michael Jackson performs the anti-gravity lean in this song's music video",
+            "Annie, are you okay?",
+            "You got struck by, you got hit by...",
             "The lyrics describe a woman being attacked in her apartment"
           ],
           answerType: "song"
@@ -45,7 +45,7 @@ const gameData = {
           hints: [
             "This is how 'The King' died",
             "He was found in his Graceland bathroom",
-            "His full name was Elvis Aaron Presley"
+            "There were many copycats after he retired"
           ],
           answerType: "artist"
         },
@@ -54,8 +54,8 @@ const gameData = {
           answer: "Careless Whisper",
           artist: "George Michael",
           hints: [
-            "The lyrics ask 'Can guilty feet have rhythm?'",
-            "The singer says 'I'm never gonna dance again'",
+            "Can guilty feet have rhythm?",
+            "Will he ever gonna dance again?",
             "This song features a famous saxophone riff"
           ],
           answerType: "song"
@@ -65,7 +65,7 @@ const gameData = {
           answer: "All I Want For Christmas Is You",
           artist: "Mariah Carey",
           hints: [
-            "She sings 'I don't want a lot for Christmas'",
+            "She doesn't want a lot for Christmas'",
             "This song earns millions every holiday season",
             "It was released in 1994 on her Merry Christmas album"
           ],
@@ -76,7 +76,7 @@ const gameData = {
           answer: "Old Town Road",
           artist: "Lil Nas X",
           hints: [
-            "The lyrics say 'Can't nobody tell me nothin''",
+            "Can't nobody tell him nothin'",
             "This song features Billy Ray Cyrus",
             "It broke the record for longest-running #1 on Billboard Hot 100"
           ],
@@ -244,7 +244,7 @@ const gameData = {
           hints: [
             "These heroes are named after Renaissance artists",
             "They love pizza and fight crime in the sewers",
-            "Their sensei is a rat named Splinter"
+            "Their sensei is a rat"
           ],
           answerType: "title"
         },
@@ -503,6 +503,12 @@ const gameScreen = document.getElementById('gameScreen');
 const resultsScreen = document.getElementById('resultsScreen');
 const gameStats = document.getElementById('gameStats');
 
+// Back button modal elements
+const backButtonModal = document.getElementById('backButtonModal');
+const closeBackModal = document.getElementById('closeBackModal');
+const cancelQuit = document.getElementById('cancelQuit');
+const confirmQuit = document.getElementById('confirmQuit');
+
 // Settings elements
 const settingsBtn = document.getElementById('settingsBtn');
 const settingsMenu = document.getElementById('settingsMenu');
@@ -569,6 +575,7 @@ function init() {
   setupEventListeners();
   setupGenres();
   updateUIFromSettings();
+  setupBackButtonHandler();
 }
 
 /**
@@ -592,6 +599,11 @@ function saveSettings() {
  * Set up all event listeners for the game
  */
 function setupEventListeners() {
+  // Back button modal
+  closeBackModal.addEventListener('click', closeBackModalFunc);
+  cancelQuit.addEventListener('click', closeBackModalFunc);
+  confirmQuit.addEventListener('click', confirmQuitGame);
+  
   // Settings menu
   settingsBtn.addEventListener('click', openSettingsMenu);
   closeSettings.addEventListener('click', closeSettingsMenu);
@@ -625,7 +637,7 @@ function setupEventListeners() {
   skipButton.addEventListener('click', skipQuestion);
   playAgainButton.addEventListener('click', () => startGame(gameState.currentGenre));
   changeGenreButton.addEventListener('click', goBackToGenreSelection);
-  quitButton.addEventListener('click', quitGame);
+  quitButton.addEventListener('click', showBackModal);
   resetButton.addEventListener('click', resetGame);
   
   // Play click sound for all buttons
@@ -721,6 +733,70 @@ function getGenreDescription(genreKey) {
   };
   
   return descriptions[genreKey] || 'Emoji Puzzles';
+}
+
+// ============================================================================
+// BACK BUTTON HANDLING FOR MOBILE
+// ============================================================================
+
+/**
+ * Set up the back button handler for mobile devices
+ */
+function setupBackButtonHandler() {
+  // Listen for back button events
+  window.addEventListener('popstate', function(event) {
+    // Only show modal if game is in progress (not on welcome screen)
+    if (!welcomeScreen.classList.contains('hidden') && !resultsScreen.classList.contains('hidden')) {
+      return; // Already on welcome or results screen
+    }
+    
+    // Show the back button modal
+    showBackModal();
+    
+    // Push a new state to prevent the back button from closing the page
+    history.pushState(null, null, window.location.pathname);
+  });
+  
+  // Push initial state
+  history.pushState(null, null, window.location.pathname);
+}
+
+/**
+ * Show the back button modal
+ */
+function showBackModal() {
+  backButtonModal.classList.remove('hidden');
+}
+
+/**
+ * Close the back button modal
+ */
+function closeBackModalFunc() {
+  backButtonModal.classList.add('hidden');
+}
+
+/**
+ * Confirm quitting the game from back button modal
+ */
+function confirmQuitGame() {
+  closeBackModalFunc();
+  quitGameWithoutConfirm();
+}
+
+/**
+ * Quit game without confirmation (used from modal)
+ */
+function quitGameWithoutConfirm() {
+  gameScreen.classList.add('hidden');
+  welcomeScreen.classList.remove('hidden');
+  gameStats.classList.add('hidden');
+  
+  // Reset background to default
+  if (gameSettings.darkMode) {
+    document.body.style.background = "linear-gradient(-45deg, #0a0a23, #1a1a4a, #3d1e6d, #6b46c1)";
+  } else {
+    document.body.style.background = "linear-gradient(-45deg, #6a11cb, #2575fc, #ff7e5f, #feb47b)";
+  }
 }
 
 // ============================================================================
@@ -1268,16 +1344,7 @@ function endGame() {
  */
 function quitGame() {
   if (confirm("Are you sure you want to quit? Your progress will be lost.")) {
-    gameScreen.classList.add('hidden');
-    welcomeScreen.classList.remove('hidden');
-    gameStats.classList.add('hidden');
-    
-    // Reset background to default
-    if (gameSettings.darkMode) {
-      document.body.style.background = "linear-gradient(-45deg, #0a0a23, #1a1a4a, #3d1e6d, #6b46c1)";
-    } else {
-      document.body.style.background = "linear-gradient(-45deg, #6a11cb, #2575fc, #ff7e5f, #feb47b)";
-    }
+    quitGameWithoutConfirm();
   }
 }
 
