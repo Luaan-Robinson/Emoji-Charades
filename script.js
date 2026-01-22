@@ -8,7 +8,7 @@ const gameData = {
   music: {
     name: "Music",
     color: "#6b46c1",
-    questions: {
+     questions: {
       easy: [
         {
           emojis: ["🪩", "🕺", "🧟‍♂️", "🧟‍♀️", "🧟", "🧟‍♂️"],
@@ -243,8 +243,8 @@ const gameData = {
           answerType: "title"
         },
         {
-          emojis: ["🧽", "📦", "👖", "🐌", "🍍", "🏠", "🌊"],
-          answer: "SpongeBob Squarepants",
+          emojis: ["🟡", "🌀", "📦"],
+          answer: "SpongeBob SquarePants",
           artist: "",
           hints: [
             "This character lives in a pineapple under the sea",
@@ -767,22 +767,70 @@ function getGenreDescription(genreKey) {
  * Set up the back button handler for mobile devices
  */
 function setupBackButtonHandler() {
+  // Track the current screen state
+  let currentScreen = 'welcome';
+  
   // Listen for back button events
   window.addEventListener('popstate', function(event) {
-    // Only show modal if game is in progress (not on welcome screen)
-    if (!welcomeScreen.classList.contains('hidden') || !resultsScreen.classList.contains('hidden')) {
-      return; // Already on welcome or results screen
+    // If we're on the welcome screen, let the back button work normally
+    if (currentScreen === 'welcome') {
+      return; // Allow normal back navigation
     }
     
-    // Show the back button modal
-    showBackModal();
+    // If we're in game or results, go back to welcome screen
+    goBackToHome();
     
-    // Push a new state to prevent the back button from closing the page
-    history.pushState(null, null, window.location.pathname);
+    // Push a new state to prevent further back navigation
+    history.pushState({ screen: 'welcome' }, null, window.location.pathname);
   });
   
+  // Update screen tracking when screens change
+  const originalStartGame = startGame;
+  startGame = function(genreKey) {
+    currentScreen = 'game';
+    history.pushState({ screen: 'game' }, null, window.location.pathname);
+    return originalStartGame(genreKey);
+  };
+  
+  const originalEndGame = endGame;
+  endGame = function() {
+    currentScreen = 'results';
+    history.pushState({ screen: 'results' }, null, window.location.pathname);
+    return originalEndGame();
+  };
+  
+  // Override the goBackToGenreSelection function
+  const originalGoBackToGenreSelection = goBackToGenreSelection;
+  goBackToGenreSelection = function() {
+    currentScreen = 'welcome';
+    history.replaceState({ screen: 'welcome' }, null, window.location.pathname);
+    return originalGoBackToGenreSelection();
+  };
+  
+  // Override the quitGameWithoutConfirm function
+  const originalQuitGameWithoutConfirm = quitGameWithoutConfirm;
+  quitGameWithoutConfirm = function() {
+    currentScreen = 'welcome';
+    history.replaceState({ screen: 'welcome' }, null, window.location.pathname);
+    return originalQuitGameWithoutConfirm();
+  };
+  
   // Push initial state
-  history.pushState(null, null, window.location.pathname);
+  history.replaceState({ screen: 'welcome' }, null, window.location.pathname);
+}
+
+/**
+ * Go back to home screen from back button
+ */
+function goBackToHome() {
+  // Check if we're in game or results screen
+  const isGameActive = !gameScreen.classList.contains('hidden');
+  const isResultsActive = !resultsScreen.classList.contains('hidden');
+  
+  if (isGameActive || isResultsActive) {
+    // Show the back button modal instead of directly quitting
+    showBackModal();
+  }
 }
 
 /**
@@ -998,6 +1046,9 @@ function startGame(genreKey) {
   
   // Set the background color based on genre
   updateBackground();
+  
+  // Return the function result
+  return true;
 }
 
 /**
@@ -1397,6 +1448,9 @@ function endGame() {
   } else {
     resultsMessage.textContent = "Good try! Give it another shot, you'll do better! 🔄";
   }
+  
+  // Return the function result
+  return true;
 }
 
 /**
@@ -1499,6 +1553,9 @@ function goBackToGenreSelection() {
   
   // Reset background to default
   updateBackground();
+  
+  // Return the function result
+  return true;
 }
 
 // ============================================================================
