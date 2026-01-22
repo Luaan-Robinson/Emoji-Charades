@@ -4,12 +4,6 @@
 // GAME DATA - EASILY EXPANDABLE STRUCTURE
 // ============================================================================
 
-// This is where you add new genres and questions
-// To add a new genre:
-// 1. Add a new entry to gameData with name, color, and questions
-// 2. Add questions for each difficulty level (easy, medium, hard)
-// 3. For music questions, use answerType: "song", "artist", or "both"
-
 const gameData = {
   music: {
     name: "Music",
@@ -138,7 +132,7 @@ const gameData = {
           answerType: "song"
         },
         {
-          emojis: ["👨", "🎸", "💔", "🌹"],
+          emojis: ["🔫", "🌹", "🌹", "🌹","👨", "🎸", "💔"],
           answer: "Guns N' Roses",
           artist: "",
           hints: [
@@ -176,7 +170,7 @@ const gameData = {
           artist: "Los Del Rio",
           hints: [
             "This dance song had everyone doing the same moves in the 90s",
-            "The lyrics tell a story about a woman named Macarena",
+            "The lyrics tell a story about a woman who cheats on her boyfriend Vitorino",
             "The dance involves specific hand motions and hip movements"
           ],
           answerType: "song"
@@ -184,12 +178,12 @@ const gameData = {
       ],
       medium: [
         {
-          emojis: ["👶", "🌟", "💎"],
+          emojis: ["✨", "💎", "✨", "🌌"],
           answer: "Diamonds",
           artist: "Rihanna",
           hints: [
             "This song compares someone to precious stones in the sky",
-            "The lyrics say 'Shine bright like a diamond'",
+            "Shine bright like a...",
             "It was a worldwide hit in 2012"
           ],
           answerType: "song"
@@ -249,8 +243,8 @@ const gameData = {
           answerType: "title"
         },
         {
-          emojis: ["🟡", "🌀", "📦"],
-          answer: "SpongeBob SquarePants",
+          emojis: ["🧽", "📦", "👖", "🐌", "🍍", "🏠", "🌊"],
+          answer: "SpongeBob Squarepants",
           artist: "",
           hints: [
             "This character lives in a pineapple under the sea",
@@ -476,16 +470,17 @@ const gameData = {
 
 let gameState = {
   currentGenre: null,
-  currentDifficulty: "easy", // Default difficulty
+  currentDifficulty: "easy",
   currentQuestionIndex: 0,
   score: 0,
   hintsUsed: 0,
-  totalHints: 3,
+  totalHints: Infinity, // Unlimited hints
   skippedQuestions: 0,
   currentQuestions: [],
   pointsPerQuestion: 10,
   isAnswerRevealed: false,
-  currentQuestionHints: 0 // Track hints used for current question
+  currentQuestionHints: 0,
+  answeredQuestions: [] // Store results for each question
 };
 
 let gameSettings = {
@@ -498,13 +493,14 @@ let gameSettings = {
 // DOM ELEMENTS
 // ============================================================================
 
+// Screens
 const welcomeScreen = document.getElementById('welcomeScreen');
 const gameScreen = document.getElementById('gameScreen');
 const resultsScreen = document.getElementById('resultsScreen');
 const gameStats = document.getElementById('gameStats');
 
-// Back button modal elements
-const backButtonModal = document.getElementById('backButtonModal');
+// Modal elements
+const backModal = document.getElementById('backModal');
 const closeBackModal = document.getElementById('closeBackModal');
 const cancelQuit = document.getElementById('cancelQuit');
 const confirmQuit = document.getElementById('confirmQuit');
@@ -518,6 +514,8 @@ const difficultyOptions = document.querySelectorAll('.difficulty-option');
 const soundToggle = document.getElementById('soundToggle');
 const themeToggle = document.getElementById('themeToggle');
 const resetSettingsBtn = document.getElementById('resetSettings');
+const feedbackBtn = document.getElementById('feedbackBtn');
+const footerFeedbackBtn = document.getElementById('footerFeedbackBtn');
 
 // Genre selection elements
 const mainGenreButtons = document.getElementById('mainGenreButtons');
@@ -542,15 +540,27 @@ const feedbackTitle = document.getElementById('feedbackTitle');
 const feedbackText = document.getElementById('feedbackText');
 const feedbackEmoji = document.getElementById('feedbackEmoji');
 const feedbackButtons = document.getElementById('feedbackButtons');
+
+// Stats elements
 const questionCounter = document.getElementById('questionCounter');
 const scoreCounter = document.getElementById('scoreCounter');
 const hintCounter = document.getElementById('hintCounter');
+
+// Results elements
 const finalScore = document.getElementById('finalScore');
 const correctAnswers = document.getElementById('correctAnswers');
 const skippedQuestions = document.getElementById('skippedQuestions');
 const hintsUsed = document.getElementById('hintsUsed');
 const finalDifficulty = document.getElementById('finalDifficulty');
 const resultsMessage = document.getElementById('resultsMessage');
+
+// Scorecard elements
+const scorecardContainer = document.getElementById('scorecardContainer');
+const scorecard = document.getElementById('scorecard');
+const shareScoreBtn = document.getElementById('shareScore');
+const showScorecardBtn = document.getElementById('showScorecard');
+
+// Action buttons
 const playAgainButton = document.getElementById('playAgain');
 const changeGenreButton = document.getElementById('changeGenre');
 const quitButton = document.getElementById('quitGame');
@@ -570,7 +580,7 @@ const hintSound = document.getElementById('hintSound');
 /**
  * Initialize the game when the page loads
  */
-function init() {
+function initGame() {
   loadSettings();
   setupEventListeners();
   setupGenres();
@@ -600,9 +610,15 @@ function saveSettings() {
  */
 function setupEventListeners() {
   // Back button modal
-  closeBackModal.addEventListener('click', closeBackModalFunc);
-  cancelQuit.addEventListener('click', closeBackModalFunc);
-  confirmQuit.addEventListener('click', confirmQuitGame);
+  if (closeBackModal) {
+    closeBackModal.addEventListener('click', closeBackModalFunc);
+  }
+  if (cancelQuit) {
+    cancelQuit.addEventListener('click', closeBackModalFunc);
+  }
+  if (confirmQuit) {
+    confirmQuit.addEventListener('click', confirmQuitGame);
+  }
   
   // Settings menu
   settingsBtn.addEventListener('click', openSettingsMenu);
@@ -622,6 +638,10 @@ function setupEventListeners() {
   themeToggle.addEventListener('change', toggleTheme);
   resetSettingsBtn.addEventListener('click', resetSettings);
   
+  // Feedback buttons
+  feedbackBtn.addEventListener('click', openFeedbackEmail);
+  footerFeedbackBtn.addEventListener('click', openFeedbackEmail);
+  
   // Genre selection
   showMoreGenres.addEventListener('click', toggleMoreGenres);
   
@@ -639,6 +659,10 @@ function setupEventListeners() {
   changeGenreButton.addEventListener('click', goBackToGenreSelection);
   quitButton.addEventListener('click', showBackModal);
   resetButton.addEventListener('click', resetGame);
+  
+  // Scorecard actions
+  showScorecardBtn.addEventListener('click', showScorecard);
+  shareScoreBtn.addEventListener('click', shareScore);
   
   // Play click sound for all buttons
   document.querySelectorAll('button').forEach(button => {
@@ -746,7 +770,7 @@ function setupBackButtonHandler() {
   // Listen for back button events
   window.addEventListener('popstate', function(event) {
     // Only show modal if game is in progress (not on welcome screen)
-    if (!welcomeScreen.classList.contains('hidden') && !resultsScreen.classList.contains('hidden')) {
+    if (!welcomeScreen.classList.contains('hidden') || !resultsScreen.classList.contains('hidden')) {
       return; // Already on welcome or results screen
     }
     
@@ -765,14 +789,18 @@ function setupBackButtonHandler() {
  * Show the back button modal
  */
 function showBackModal() {
-  backButtonModal.classList.remove('hidden');
+  if (backModal) {
+    backModal.classList.remove('hidden');
+  }
 }
 
 /**
  * Close the back button modal
  */
 function closeBackModalFunc() {
-  backButtonModal.classList.add('hidden');
+  if (backModal) {
+    backModal.classList.add('hidden');
+  }
 }
 
 /**
@@ -788,15 +816,12 @@ function confirmQuitGame() {
  */
 function quitGameWithoutConfirm() {
   gameScreen.classList.add('hidden');
+  resultsScreen.classList.add('hidden');
   welcomeScreen.classList.remove('hidden');
   gameStats.classList.add('hidden');
   
   // Reset background to default
-  if (gameSettings.darkMode) {
-    document.body.style.background = "linear-gradient(-45deg, #0a0a23, #1a1a4a, #3d1e6d, #6b46c1)";
-  } else {
-    document.body.style.background = "linear-gradient(-45deg, #6a11cb, #2575fc, #ff7e5f, #feb47b)";
-  }
+  updateBackground();
 }
 
 // ============================================================================
@@ -905,6 +930,16 @@ function updateUIFromSettings() {
 }
 
 /**
+ * Open feedback email
+ */
+function openFeedbackEmail() {
+  const subject = encodeURIComponent("Emoji Charades BETA Feedback");
+  const body = encodeURIComponent("Hi Luaan,\n\nHere's my feedback for Emoji Charades BETA:\n\n");
+  window.open(`mailto:luaanrobinson@gmail.com?subject=${subject}&body=${body}`, '_blank');
+  closeSettingsMenu();
+}
+
+/**
  * Toggle showing more genres
  */
 function toggleMoreGenres() {
@@ -934,6 +969,7 @@ function startGame(genreKey) {
   gameState.currentQuestions = [...gameData[genreKey].questions[gameState.currentDifficulty]];
   gameState.isAnswerRevealed = false;
   gameState.currentQuestionHints = 0;
+  gameState.answeredQuestions = [];
   
   // Set points based on difficulty
   updatePointsPerQuestion();
@@ -948,6 +984,7 @@ function startGame(genreKey) {
   welcomeScreen.classList.add('hidden');
   gameScreen.classList.remove('hidden');
   resultsScreen.classList.add('hidden');
+  scorecardContainer.classList.add('hidden');
   feedbackMessage.classList.add('hidden');
   gameStats.classList.remove('hidden');
   additionalGenres.classList.add('hidden');
@@ -960,11 +997,7 @@ function startGame(genreKey) {
   loadQuestion();
   
   // Set the background color based on genre
-  document.body.style.background = `linear-gradient(-45deg, #0a0a23, #1a1a4a, ${gameData[genreKey].color}, #6b46c1)`;
-  
-  if (!gameSettings.darkMode) {
-    document.body.style.background = `linear-gradient(-45deg, #6a11cb, #2575fc, ${gameData[genreKey].color}, #feb47b)`;
-  }
+  updateBackground();
 }
 
 /**
@@ -981,6 +1014,26 @@ function updatePointsPerQuestion() {
     case 'hard':
       gameState.pointsPerQuestion = 20;
       break;
+  }
+}
+
+/**
+ * Update background based on theme and genre
+ */
+function updateBackground() {
+  if (gameState.currentGenre && gameData[gameState.currentGenre]) {
+    const genreColor = gameData[gameState.currentGenre].color;
+    if (gameSettings.darkMode) {
+      document.body.style.background = `linear-gradient(-45deg, #0a0a23, #1a1a4a, ${genreColor}, #6b46c1)`;
+    } else {
+      document.body.style.background = `linear-gradient(-45deg, #6a11cb, #2575fc, ${genreColor}, #feb47b)`;
+    }
+  } else {
+    if (gameSettings.darkMode) {
+      document.body.style.background = "linear-gradient(-45deg, #0a0a23, #1a1a4a, #3d1e6d, #6b46c1)";
+    } else {
+      document.body.style.background = "linear-gradient(-45deg, #6a11cb, #2575fc, #ff7e5f, #feb47b)";
+    }
   }
 }
 
@@ -1031,10 +1084,8 @@ function loadQuestion() {
   answerInput.disabled = false;
   submitButton.disabled = false;
   
-  // Update hint button
-  const hintsRemaining = gameState.totalHints - gameState.hintsUsed;
-  hintsLeft.textContent = hintsRemaining;
-  hintButton.disabled = hintsRemaining <= 0;
+  // Update hint button - always enabled since hints are unlimited
+  hintButton.disabled = false;
   
   // Make sure answer section is visible
   document.querySelector('.answer-section').classList.remove('hidden');
@@ -1070,6 +1121,16 @@ function checkAnswer() {
     isCorrect = userAnswer === correctAnswer;
   }
   
+  // Store result for scorecard
+  gameState.answeredQuestions.push({
+    question: currentQuestionData.emojis.join(' '),
+    answer: currentQuestionData.answer,
+    artist: currentQuestionData.artist,
+    userAnswer: userAnswer,
+    correct: isCorrect,
+    skipped: false
+  });
+  
   if (isCorrect) {
     // Correct answer
     gameState.score += gameState.pointsPerQuestion;
@@ -1086,7 +1147,7 @@ function checkAnswer() {
 }
 
 /**
- * Show feedback for correct answer - FIXED VERSION
+ * Show feedback for correct answer
  */
 function showFeedback(isCorrect, questionData) {
   // Set feedback content
@@ -1141,7 +1202,7 @@ function showFeedback(isCorrect, questionData) {
 }
 
 /**
- * Show feedback for wrong answer with try again option - FIXED VERSION
+ * Show feedback for wrong answer with try again option
  */
 function showTryAgainFeedback(questionData) {
   feedbackTitle.textContent = "Not Quite Right!";
@@ -1208,13 +1269,6 @@ function showTryAgainFeedback(questionData) {
  * Give a hint for the current question
  */
 function giveHint() {
-  // Check if hints are available
-  if (gameState.hintsUsed >= gameState.totalHints) {
-    hintText.textContent = "No hints remaining!";
-    hintButton.disabled = true;
-    return;
-  }
-  
   // Get current question data
   const currentQuestionData = gameState.currentQuestions[gameState.currentQuestionIndex];
   
@@ -1227,27 +1281,33 @@ function giveHint() {
     hintText.textContent = "No more hints for this question!";
   }
   
-  // Update hint count
+  // Update hint count (just for tracking, not limiting)
   gameState.hintsUsed++;
   updateStats();
-  
-  // Disable button if no hints left overall
-  if (gameState.hintsUsed >= gameState.totalHints) {
-    hintButton.disabled = true;
-  }
   
   playSound(hintSound);
 }
 
 /**
- * Skip the current question - FIXED VERSION
+ * Skip the current question
  */
 function skipQuestion() {
+  const currentQuestionData = gameState.currentQuestions[gameState.currentQuestionIndex];
+  
+  // Store result for scorecard
+  gameState.answeredQuestions.push({
+    question: currentQuestionData.emojis.join(' '),
+    answer: currentQuestionData.answer,
+    artist: currentQuestionData.artist,
+    userAnswer: '',
+    correct: false,
+    skipped: true
+  });
+  
   // Update skipped count
   gameState.skippedQuestions++;
   
   // Show feedback for skipped question
-  const currentQuestionData = gameState.currentQuestions[gameState.currentQuestionIndex];
   feedbackTitle.textContent = "Question Skipped";
   feedbackTitle.style.color = "#FF9800";
   
@@ -1340,11 +1400,82 @@ function endGame() {
 }
 
 /**
- * Quit the game and return to home screen
+ * Show scorecard with detailed results
  */
-function quitGame() {
-  if (confirm("Are you sure you want to quit? Your progress will be lost.")) {
-    quitGameWithoutConfirm();
+function showScorecard() {
+  scorecardContainer.classList.remove('hidden');
+  scorecard.innerHTML = '';
+  
+  gameState.answeredQuestions.forEach((result, index) => {
+    const scorecardItem = document.createElement('div');
+    scorecardItem.className = 'scorecard-item';
+    
+    let statusIcon = '❌';
+    let statusClass = 'wrong';
+    
+    if (result.skipped) {
+      statusIcon = '⏭️';
+      statusClass = 'skipped';
+    } else if (result.correct) {
+      statusIcon = '✅';
+      statusClass = 'correct';
+    }
+    
+    let answerText = result.answer;
+    if (result.artist && result.artist.trim() !== "") {
+      answerText += ` (${result.artist})`;
+    }
+    
+    scorecardItem.innerHTML = `
+      <div class="scorecard-question">
+        <span class="scorecard-status ${statusClass}">${statusIcon}</span>
+        <span class="scorecard-question-number">Q${index + 1}:</span>
+        <span class="scorecard-emojis">${result.question}</span>
+      </div>
+      <div class="scorecard-answer">
+        <strong>Answer:</strong> ${answerText}
+        ${result.userAnswer && !result.skipped ? `<br><strong>Your answer:</strong> ${result.userAnswer}` : ''}
+      </div>
+    `;
+    
+    scorecard.appendChild(scorecardItem);
+  });
+}
+
+/**
+ * Share score results
+ */
+function shareScore() {
+  const correctCount = Math.floor(gameState.score / gameState.pointsPerQuestion);
+  const totalQuestions = gameState.answeredQuestions.length;
+  const percentage = Math.round((correctCount / totalQuestions) * 100);
+  
+  const shareText = `I scored ${gameState.score} points in Emoji Charades BETA! 🎮\n\n` +
+                   `📊 Results:\n` +
+                   `✅ ${correctCount}/${totalQuestions} correct (${percentage}%)\n` +
+                   `💡 ${gameState.hintsUsed} hints used\n` +
+                   `🎯 ${gameState.currentDifficulty} difficulty\n\n` +
+                   `Play the game here: ${window.location.href}`;
+  
+  if (navigator.share) {
+    navigator.share({
+      title: 'My Emoji Charades Score',
+      text: shareText,
+      url: window.location.href
+    }).catch(console.error);
+  } else {
+    navigator.clipboard.writeText(shareText).then(() => {
+      alert('Score copied to clipboard! 📋');
+    }).catch(() => {
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = shareText;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      alert('Score copied to clipboard! 📋');
+    });
   }
 }
 
@@ -1362,15 +1493,12 @@ function resetGame() {
  */
 function goBackToGenreSelection() {
   resultsScreen.classList.add('hidden');
+  scorecardContainer.classList.add('hidden');
   welcomeScreen.classList.remove('hidden');
   gameStats.classList.add('hidden');
   
   // Reset background to default
-  if (gameSettings.darkMode) {
-    document.body.style.background = "linear-gradient(-45deg, #0a0a23, #1a1a4a, #3d1e6d, #6b46c1)";
-  } else {
-    document.body.style.background = "linear-gradient(-45deg, #6a11cb, #2575fc, #ff7e5f, #feb47b)";
-  }
+  updateBackground();
 }
 
 // ============================================================================
@@ -1383,7 +1511,7 @@ function goBackToGenreSelection() {
 function updateStats() {
   questionCounter.textContent = `${gameState.currentQuestionIndex + 1}/10`;
   scoreCounter.textContent = gameState.score;
-  hintCounter.textContent = gameState.totalHints - gameState.hintsUsed;
+  hintCounter.textContent = "∞"; // Always show infinity symbol for hints
 }
 
 /**
@@ -1421,4 +1549,4 @@ function shuffleArray(array) {
 // ============================================================================
 
 // Initialize the game when the page loads
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', initGame);

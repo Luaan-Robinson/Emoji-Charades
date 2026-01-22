@@ -39,7 +39,7 @@
           </div>
           <div class="stat">
             <span class="stat-label">Hints:</span>
-            <span class="stat-value" id="hintCounter">3</span>
+            <span class="stat-value" id="hintCounter">∞</span>
           </div>
         </div>
       </header>
@@ -97,6 +97,13 @@
             </div>
           </div>
           
+          <!-- Feedback Button -->
+          <div class="setting-group">
+            <button class="feedback-btn" id="feedbackBtn">
+              <i class="fas fa-comment-dots"></i> Send Feedback
+            </button>
+          </div>
+          
           <!-- Reset All Settings -->
           <div class="setting-group">
             <button class="reset-settings-btn" id="resetSettings">
@@ -108,6 +115,25 @@
       
       <!-- Settings Overlay (for closing menu when clicking outside) -->
       <div class="settings-overlay hidden" id="settingsOverlay"></div>
+      
+      <!-- Back Button Modal (for mobile) -->
+      <div class="modal-overlay hidden" id="backModal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3><i class="fas fa-exclamation-triangle"></i> Quit Game?</h3>
+            <button class="close-modal" id="closeBackModal">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you want to quit? Your current progress will be lost.</p>
+          </div>
+          <div class="modal-buttons">
+            <button class="modal-btn cancel-btn" id="cancelQuit">Cancel</button>
+            <button class="modal-btn confirm-btn" id="confirmQuit">Quit Game</button>
+          </div>
+        </div>
+      </div>
       
       <!-- Main Content Area -->
       <main class="main-content">
@@ -145,7 +171,7 @@
               <ul>
                 <li>You'll get 10 emoji clues, one at a time</li>
                 <li>Type your answer in the input field</li>
-                <li>Use the "Hint" button if you're stuck (3 hints max)</li>
+                <li>Use the "Hint" button if you're stuck (unlimited while in Beta)</li>
                 <li>Use "Skip" if you can't figure it out</li>
                 <li>Higher difficulty = more points per question</li>
                 <li>Change settings with the <i class="fas fa-cog"></i> button</li>
@@ -200,7 +226,7 @@
                 <p class="hint-text" id="hintText"></p>
                 <div class="hint-buttons">
                   <button class="hint-btn" id="getHint">
-                    <i class="fas fa-lightbulb"></i> Get Hint <span>(<span id="hintsLeft">3</span> left)</span>
+                    <i class="fas fa-lightbulb"></i> Get Hint <span class="hint-unlimited">(Unlimited while in Beta)</span>
                   </button>
                   <button class="skip-btn" id="skipQuestion">
                     <i class="fas fa-forward"></i> Skip Question
@@ -254,9 +280,25 @@
               </div>
             </div>
             
+            <!-- Scorecard Section -->
+            <div class="scorecard-container hidden" id="scorecardContainer">
+              <h3><i class="fas fa-list-check"></i> Question Results</h3>
+              <div class="scorecard" id="scorecard">
+                <!-- Scorecard will be populated dynamically -->
+              </div>
+              <div class="share-container">
+                <button class="share-btn" id="shareScore">
+                  <i class="fas fa-share-alt"></i> Share Results
+                </button>
+              </div>
+            </div>
+            
             <div class="action-buttons">
               <button class="play-again-btn" id="playAgain">
                 <i class="fas fa-redo"></i> Play Again
+              </button>
+              <button class="show-scorecard-btn" id="showScorecard">
+                <i class="fas fa-chart-bar"></i> View Scorecard
               </button>
               <button class="change-genre-btn" id="changeGenre">
                 <i class="fas fa-exchange-alt"></i> New Genre
@@ -271,7 +313,7 @@
       <footer class="game-footer">
         <div class="footer-content">
           <div class="footer-info">
-            <p>Emoji Charades v1.0</p>
+            <p>Emoji Charades <span class="beta-badge">BETA</span></p>
             <p>Created by <span id="creatorName">Luaan Robinson</span></p>
             <p><i class="fas fa-envelope"></i> <span id="creatorEmail">luaanrobinson@gmail.com</span></p>
             <p><i class="fas fa-phone"></i> <span id="creatorPhone">+27687503349</span></p>
@@ -282,30 +324,29 @@
           </div>
           <div class="footer-attribution">
             <p>Made with <i class="fas fa-heart"></i> for emoji lovers everywhere</p>
+            <p class="feedback-link">
+              <i class="fas fa-comment"></i> 
+              <a href="#" id="footerFeedbackBtn">Send Feedback</a>
+            </p>
           </div>
         </div>
       </footer>
     </div>
     
-    <!-- Audio Elements for Sound Effects (using different sources) -->
+    <!-- Audio Elements for Sound Effects -->
     <audio id="correctSound" preload="auto">
-      <!-- Free sound from freesound.org -->
       <source src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3" type="audio/mpeg">
     </audio>
     <audio id="wrongSound" preload="auto">
-      <!-- Free sound from freesound.org -->
       <source src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3" type="audio/mpeg">
     </audio>
     <audio id="clickSound" preload="auto">
-      <!-- Free sound from freesound.org -->
       <source src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3" type="audio/mpeg">
     </audio>
     <audio id="skipSound" preload="auto">
-      <!-- Free sound from freesound.org -->
       <source src="https://assets.mixkit.co/sfx/preview/mixkit-plastic-bubble-click-1124.mp3" type="audio/mpeg">
     </audio>
     <audio id="hintSound" preload="auto">
-      <!-- Free sound from freesound.org -->
       <source src="https://assets.mixkit.co/sfx/preview/mixkit-magic-sparkles-300.mp3" type="audio/mpeg">
     </audio>
     
