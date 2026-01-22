@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Emoji Charades - Guess the answer from emoji clues!" />
+    <title>Emoji Charades</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Fredoka+One&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <!-- Main Game Container -->
+    <div class="game-container" id="gameContainer">
+      
+      <!-- Game Header with Settings Button -->
+      <header class="game-header">
+        <div class="logo-container">
+          <h1><i class="fas fa-gamepad"></i> Emoji Charades</h1>
+          <p class="tagline">Guess the answer from emoji clues!</p>
+        </div>
+        
+        <!-- Settings Button -->
+        <button class="settings-btn" id="settingsBtn" title="Game Settings">
+          <i class="fas fa-cog"></i>
+        </button>
+        
+        <!-- Game Stats (shown during gameplay) -->
+        <div class="game-stats" id="gameStats">
+          <div class="stat">
+            <span class="stat-label">Questions:</span>
+            <span class="stat-value" id="questionCounter">0/10</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Score:</span>
+            <span class="stat-value" id="scoreCounter">0</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Hints:</span>
+            <span class="stat-value" id="hintCounter">3</span>
+          </div>
+        </div>
+      </header>
+      
+      <!-- Settings Menu (Hidden by default) -->
+      <div class="settings-menu hidden" id="settingsMenu">
+        <div class="settings-header">
+          <h3><i class="fas fa-cog"></i> Game Settings</h3>
+          <button class="close-settings" id="closeSettings">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        
+        <div class="settings-content">
+          <!-- Difficulty Setting -->
+          <div class="setting-group">
+            <h4><i class="fas fa-chart-line"></i> Difficulty Level</h4>
+            <div class="difficulty-options">
+              <button class="difficulty-option" data-difficulty="easy">
+                <span class="difficulty-label">Easy</span>
+                <span class="difficulty-desc">10 points per answer</span>
+              </button>
+              <button class="difficulty-option" data-difficulty="medium">
+                <span class="difficulty-label">Medium</span>
+                <span class="difficulty-desc">15 points per answer</span>
+              </button>
+              <button class="difficulty-option" data-difficulty="hard">
+                <span class="difficulty-label">Hard</span>
+                <span class="difficulty-desc">20 points per answer</span>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Sound Setting -->
+          <div class="setting-group">
+            <h4><i class="fas fa-volume-up"></i> Sound Effects</h4>
+            <div class="toggle-switch">
+              <span class="toggle-label">Enable sounds</span>
+              <label class="switch">
+                <input type="checkbox" id="soundToggle" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+          
+          <!-- Theme Setting -->
+          <div class="setting-group">
+            <h4><i class="fas fa-palette"></i> Theme</h4>
+            <div class="toggle-switch">
+              <span class="toggle-label">Dark mode</span>
+              <label class="switch">
+                <input type="checkbox" id="themeToggle">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+          
+          <!-- Reset All Settings -->
+          <div class="setting-group">
+            <button class="reset-settings-btn" id="resetSettings">
+              <i class="fas fa-undo"></i> Reset All Settings
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Settings Overlay (for closing menu when clicking outside) -->
+      <div class="settings-overlay hidden" id="settingsOverlay"></div>
+      
+      <!-- Main Content Area -->
+      <main class="main-content">
+        
+        <!-- Welcome Screen (Initially shown) -->
+        <section class="welcome-screen" id="welcomeScreen">
+          <div class="welcome-card">
+            <h2><i class="fas fa-smile-beam"></i> Welcome to Emoji Charades!</h2>
+            <p>Choose a genre and guess the answers from emoji clues. Get as many right as you can in 10 questions!</p>
+            
+            <!-- Main Genre Selection -->
+            <div class="genre-selection">
+              <h3>Select a Genre:</h3>
+              <div class="genre-buttons" id="mainGenreButtons">
+                <!-- Main genres will be loaded here by JavaScript -->
+              </div>
+              
+              <!-- Show More Genres Button -->
+              <div class="more-genres-container">
+                <button class="more-genres-btn" id="showMoreGenres">
+                  <i class="fas fa-ellipsis-h"></i> More Genres
+                </button>
+              </div>
+              
+              <!-- Additional Genres (Hidden by default) -->
+              <div class="additional-genres hidden" id="additionalGenres">
+                <div class="genre-buttons" id="additionalGenreButtons">
+                  <!-- Additional genres will be loaded here by JavaScript -->
+                </div>
+              </div>
+            </div>
+            
+            <div class="game-instructions">
+              <h3><i class="fas fa-info-circle"></i> How to Play:</h3>
+              <ul>
+                <li>You'll get 10 emoji clues, one at a time</li>
+                <li>Type your answer in the input field</li>
+                <li>Use the "Hint" button if you're stuck (3 hints max)</li>
+                <li>Use "Skip" if you can't figure it out</li>
+                <li>Higher difficulty = more points per question</li>
+                <li>Change settings with the <i class="fas fa-cog"></i> button</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Game Screen (Shown during gameplay) -->
+        <section class="game-screen hidden" id="gameScreen">
+          <div class="game-controls-top">
+            <button class="quit-btn" id="quitGame">
+              <i class="fas fa-home"></i> Quit Game
+            </button>
+            <button class="reset-btn" id="resetGame">
+              <i class="fas fa-redo"></i> Reset Game
+            </button>
+          </div>
+          
+          <div class="question-card">
+            <!-- Emoji Display -->
+            <div class="emoji-display" id="emojiDisplay">
+              <span>🎮</span>
+              <span>🐉</span>
+              <span>⚔️</span>
+              <span>🧝</span>
+              <span>🏹</span>
+            </div>
+            
+            <!-- Question Info -->
+            <div class="question-info">
+              <h3 id="questionCategory">Video Games</h3>
+              <div class="question-meta">
+                <p class="question-counter" id="currentQuestion">Question 1 of 10</p>
+                <p class="question-points" id="questionPoints">10 points</p>
+                <p class="answer-type" id="answerTypeHint">(Song Name)</p>
+              </div>
+            </div>
+            
+            <!-- Answer Input Area -->
+            <div class="answer-section">
+              <div class="input-group">
+                <label for="answerInput">Your Answer:</label>
+                <input type="text" id="answerInput" placeholder="Type your answer here..." autocomplete="off">
+                <button class="submit-btn" id="submitAnswer">
+                  <i class="fas fa-paper-plane"></i> Submit
+                </button>
+              </div>
+              
+              <!-- Hint Area -->
+              <div class="hint-area">
+                <p class="hint-text" id="hintText"></p>
+                <div class="hint-buttons">
+                  <button class="hint-btn" id="getHint">
+                    <i class="fas fa-lightbulb"></i> Get Hint <span>(<span id="hintsLeft">3</span> left)</span>
+                  </button>
+                  <button class="skip-btn" id="skipQuestion">
+                    <i class="fas fa-forward"></i> Skip Question
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Feedback Message (Shown after answer submission) -->
+          <div class="feedback-message hidden" id="feedbackMessage">
+            <h3 id="feedbackTitle"></h3>
+            <p id="feedbackText"></p>
+            <div class="feedback-emoji" id="feedbackEmoji"></div>
+            <div class="feedback-buttons" id="feedbackButtons">
+              <!-- This will be populated dynamically -->
+            </div>
+          </div>
+        </section>
+        
+        <!-- Results Screen (Shown after game ends) -->
+        <section class="results-screen hidden" id="resultsScreen">
+          <div class="results-card">
+            <div class="results-header">
+              <h2><i class="fas fa-trophy"></i> Game Complete!</h2>
+              <p id="resultsMessage">Here's how you did:</p>
+            </div>
+            
+            <div class="score-display">
+              <div class="final-score">
+                <span class="score-label">Final Score:</span>
+                <span class="score-value" id="finalScore">0</span>
+              </div>
+              <div class="score-breakdown">
+                <div class="breakdown-item">
+                  <span class="breakdown-label">Correct Answers:</span>
+                  <span class="breakdown-value" id="correctAnswers">0</span>
+                </div>
+                <div class="breakdown-item">
+                  <span class="breakdown-label">Skipped Questions:</span>
+                  <span class="breakdown-value" id="skippedQuestions">0</span>
+                </div>
+                <div class="breakdown-item">
+                  <span class="breakdown-label">Hints Used:</span>
+                  <span class="breakdown-value" id="hintsUsed">0</span>
+                </div>
+                <div class="breakdown-item">
+                  <span class="breakdown-label">Difficulty:</span>
+                  <span class="breakdown-value" id="finalDifficulty">Easy</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="action-buttons">
+              <button class="play-again-btn" id="playAgain">
+                <i class="fas fa-redo"></i> Play Again
+              </button>
+              <button class="change-genre-btn" id="changeGenre">
+                <i class="fas fa-exchange-alt"></i> New Genre
+              </button>
+            </div>
+          </div>
+        </section>
+        
+      </main>
+      
+      <!-- Game Footer -->
+      <footer class="game-footer">
+        <div class="footer-content">
+          <div class="footer-info">
+            <p>Emoji Charades v1.0</p>
+            <p>Created by <span id="creatorName">[Your Name Here]</span></p>
+            <p><i class="fas fa-envelope"></i> <span id="creatorEmail">[Your Email Here]</span></p>
+            <p><i class="fas fa-phone"></i> <span id="creatorPhone">[Your Phone Number Here]</span></p>
+            <p class="github-link">
+              <i class="fab fa-github"></i> 
+              <a href="https://github.com/yourusername/emoji-charades" target="_blank">View on GitHub</a>
+            </p>
+          </div>
+          <div class="footer-attribution">
+            <p>Made with <i class="fas fa-heart"></i> for emoji lovers everywhere</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <!-- Audio Elements for Sound Effects (using different sources) -->
+    <audio id="correctSound" preload="auto">
+      <!-- Free sound from freesound.org -->
+      <source src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="wrongSound" preload="auto">
+      <!-- Free sound from freesound.org -->
+      <source src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="clickSound" preload="auto">
+      <!-- Free sound from freesound.org -->
+      <source src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="skipSound" preload="auto">
+      <!-- Free sound from freesound.org -->
+      <source src="https://assets.mixkit.co/sfx/preview/mixkit-plastic-bubble-click-1124.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="hintSound" preload="auto">
+      <!-- Free sound from freesound.org -->
+      <source src="https://assets.mixkit.co/sfx/preview/mixkit-magic-sparkles-300.mp3" type="audio/mpeg">
+    </audio>
+    
+    <!-- JavaScript File -->
+    <script src="script.js"></script>
+  </body>
+</html>
