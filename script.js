@@ -17,24 +17,168 @@ const gameData = {
     questions: {
       easy: [
         {
-          emojis: ["🪩", "🕺", "🧟‍♂️", "🧟‍♀️"],
+          emojis: ["🪩", "🕺", "🧟‍♂️", "🧟‍♀️", "🧟", "🧟‍♂️"],
           answer: "Thriller",
           artist: "Michael Jackson",
-          hint: "This song features zombies and is by the King of Pop",
-          answerType: "song" // Options: "song", "artist", "both"
-        },
-        {
-          emojis: ["👑", "❤️", "🔥"],
-          answer: "Firework",
-          artist: "Katy Perry",
-          hint: "This song encourages you to let your inner light shine",
+          hints: [
+            "This song features zombies and is by the King of Pop",
+            "The music video is a short horror film",
+            "The song has a famous spoken word rap section by Vincent Price"
+          ],
           answerType: "song"
         },
         {
-          emojis: ["🌊", "🌅", "🏄"],
-          answer: "Kokomo",
-          artist: "The Beach Boys",
-          hint: "This song mentions a tropical paradise",
+          emojis: ["👱‍♀️", "💥", "🪟", "🔫", "🪩", "🕺", "🕵️‍♂️"],
+          answer: "Smooth Criminal",
+          artist: "Michael Jackson",
+          hints: [
+            "This song asks 'Annie, are you okay?'",
+            "Michael Jackson performs the anti-gravity lean in this song's music video",
+            "The lyrics describe a woman being attacked in her apartment"
+          ],
+          answerType: "song"
+        },
+        {
+          emojis: ["🚽", "😵", "💔"],
+          answer: "Elvis Presley",
+          artist: "",
+          hints: [
+            "This is how 'The King' died",
+            "He was found in his Graceland bathroom",
+            "His full name was Elvis Aaron Presley"
+          ],
+          answerType: "artist"
+        },
+        {
+          emojis: ["🎷", "🌃", "👣", "💔", "🤫", "🌉"],
+          answer: "Careless Whisper",
+          artist: "George Michael",
+          hints: [
+            "The lyrics ask 'Can guilty feet have rhythm?'",
+            "The singer says 'I'm never gonna dance again'",
+            "This song features a famous saxophone riff"
+          ],
+          answerType: "song"
+        },
+        {
+          emojis: ["🎄", "🎁", "🧔🏻", "📯", "🎹", "🏃‍♀️", "❤️", "🔥"],
+          answer: "All I Want For Christmas Is You",
+          artist: "Mariah Carey",
+          hints: [
+            "She sings 'I don't want a lot for Christmas'",
+            "This song earns millions every holiday season",
+            "It was released in 1994 on her Merry Christmas album"
+          ],
+          answerType: "song"
+        },
+        {
+          emojis: ["🤠", "🌈", "🐎", "🚗", "🛣️", "⚡", "🎸"],
+          answer: "Old Town Road",
+          artist: "Lil Nas X",
+          hints: [
+            "The lyrics say 'Can't nobody tell me nothin''",
+            "This song features Billy Ray Cyrus",
+            "It broke the record for longest-running #1 on Billboard Hot 100"
+          ],
+          answerType: "song"
+        },
+        {
+          emojis: ["👑", "😭", "🌎"],
+          answer: "We Are the World",
+          artist: "USA for Africa",
+          hints: [
+            "This charity song was written by Michael Jackson and Lionel Richie",
+            "It features dozens of famous artists singing together",
+            "The lyrics begin 'There comes a time when we heed a certain call'"
+          ],
+          answerType: "song"
+        },
+        {
+          emojis: ["⚡", "🎸", "🏃", "🚫"],
+          answer: "AC/DC",
+          artist: "",
+          hints: [
+            "This Australian rock band has an electrifying name",
+            "Their famous songs include 'Highway to Hell' and 'Back in Black'",
+            "The band's name refers to alternating current/direct current electricity"
+          ],
+          answerType: "artist"
+        },
+        {
+          emojis: ["🕺", "🌙", "💃", "⭐"],
+          answer: "Dancing Queen",
+          artist: "ABBA",
+          hints: [
+            "This disco hit is from the Swedish supergroup",
+            "The lyrics describe a 'young and sweet, only seventeen' girl",
+            "It was featured in the musical 'Mamma Mia!'"
+          ],
+          answerType: "song"
+        },
+        {
+          emojis: ["🚀", "👨", "🌕", "🌌"],
+          answer: "Rocket Man",
+          artist: "Elton John",
+          hints: [
+            "This song describes an astronaut missing Earth",
+            "The lyrics say 'I'm not the man they think I am at home'",
+            "Elton John performed this at Princess Diana's funeral"
+          ],
+          answerType: "song"
+        },
+        {
+          emojis: ["🎸", "⚫", "💀", "🎵"],
+          answer: "Back in Black",
+          artist: "AC/DC",
+          hints: [
+            "This hard rock anthem starts with iconic guitar riffs",
+            "It was written as a tribute to their deceased lead singer Bon Scott",
+            "The album cover is completely black"
+          ],
+          answerType: "song"
+        },
+        {
+          emojis: ["👨", "🎸", "💔", "🌹"],
+          answer: "Guns N' Roses",
+          artist: "",
+          hints: [
+            "This hard rock band's name combines weapons and flowers",
+            "Their debut album is 'Appetite for Destruction'",
+            "Lead singers are Axl Rose and Slash is the guitarist"
+          ],
+          answerType: "artist"
+        },
+        {
+          emojis: ["🚫", "😭", "💪", "🔄"],
+          answer: "Stronger",
+          artist: "Kanye West",
+          hints: [
+            "The lyrics sample 'Harder, Better, Faster, Stronger' by Daft Punk",
+            "Kanye sings 'That that don't kill me, can only make me stronger'",
+            "This song is about resilience after a breakup"
+          ],
+          answerType: "song"
+        },
+        {
+          emojis: ["👑", "👑", "👑", "🎤"],
+          answer: "Queen",
+          artist: "",
+          hints: [
+            "This British rock band's lead singer was Freddie Mercury",
+            "Famous songs include 'Bohemian Rhapsody' and 'We Will Rock You'",
+            "The band name means female monarch"
+          ],
+          answerType: "artist"
+        },
+        {
+          emojis: ["🌊", "💃", "🎶", "🌅"],
+          answer: "Macarena",
+          artist: "Los Del Rio",
+          hints: [
+            "This dance song had everyone doing the same moves in the 90s",
+            "The lyrics tell a story about a woman named Macarena",
+            "The dance involves specific hand motions and hip movements"
+          ],
           answerType: "song"
         }
       ],
@@ -43,14 +187,22 @@ const gameData = {
           emojis: ["👶", "🌟", "💎"],
           answer: "Diamonds",
           artist: "Rihanna",
-          hint: "This song compares someone to precious stones in the sky",
+          hints: [
+            "This song compares someone to precious stones in the sky",
+            "The lyrics say 'Shine bright like a diamond'",
+            "It was a worldwide hit in 2012"
+          ],
           answerType: "song"
         },
         {
           emojis: ["🕺", "☀️", "😎"],
           answer: "Walking on Sunshine",
           artist: "Katrina and the Waves",
-          hint: "This upbeat song is about feeling extremely happy",
+          hints: [
+            "This upbeat song is about feeling extremely happy",
+            "It was featured in many movies and commercials",
+            "The singer feels like she's walking on sunshine"
+          ],
           answerType: "song"
         }
       ],
@@ -59,15 +211,23 @@ const gameData = {
           emojis: ["🏨", "💀", "🌴"],
           answer: "Hotel California",
           artist: "Eagles",
-          hint: "This song describes a mysterious hotel you can check out of but never leave",
+          hints: [
+            "This song describes a mysterious hotel you can check out of but never leave",
+            "It's often interpreted as a metaphor for the excesses of American culture",
+            "The guitar solo at the end is famous"
+          ],
           answerType: "song"
         },
         {
           emojis: ["👑", "😔", "🇬🇧"],
           answer: "God Save the Queen",
           artist: "Sex Pistols",
-          hint: "This punk song was controversial for its criticism of the monarchy",
-          answerType: "both" // Requires both song and artist
+          hints: [
+            "This punk song was controversial for its criticism of the monarchy",
+            "It was released during Queen Elizabeth II's Silver Jubilee",
+            "The song was banned by the BBC"
+          ],
+          answerType: "both"
         }
       ]
     }
@@ -81,14 +241,22 @@ const gameData = {
           emojis: ["🐀", "🐢", "🐢", "🐢", "🐢"],
           answer: "Teenage Mutant Ninja Turtles",
           artist: "",
-          hint: "These heroes are named after Renaissance artists",
+          hints: [
+            "These heroes are named after Renaissance artists",
+            "They love pizza and fight crime in the sewers",
+            "Their sensei is a rat named Splinter"
+          ],
           answerType: "title"
         },
         {
           emojis: ["🟡", "🌀", "📦"],
           answer: "SpongeBob SquarePants",
           artist: "",
-          hint: "This character lives in a pineapple under the sea",
+          hints: [
+            "This character lives in a pineapple under the sea",
+            "He works as a fry cook at the Krusty Krab",
+            "His best friend is a starfish named Patrick"
+          ],
           answerType: "title"
         }
       ],
@@ -97,7 +265,11 @@ const gameData = {
           emojis: ["🦆", "💰", "🏦"],
           answer: "Scrooge McDuck",
           artist: "",
-          hint: "This character is known for swimming in his money",
+          hints: [
+            "This character is known for swimming in his money",
+            "He is Donald Duck's wealthy uncle",
+            "He first appeared in 1947"
+          ],
           answerType: "character"
         }
       ],
@@ -106,7 +278,11 @@ const gameData = {
           emojis: ["🦊", "🐶", "🔫", "🌵"],
           answer: "Cowboy Bebop",
           artist: "",
-          hint: "This anime follows bounty hunters in space",
+          hints: [
+            "This anime follows bounty hunters in space",
+            "The main character is Spike Spiegel",
+            "The show is known for its jazz soundtrack"
+          ],
           answerType: "title"
         }
       ]
@@ -121,7 +297,11 @@ const gameData = {
           emojis: ["🎮", "🐉", "⚔️", "🧝"],
           answer: "The Legend of Zelda",
           artist: "",
-          hint: "This game features a hero named Link saving Princess Zelda",
+          hints: [
+            "This game features a hero named Link saving Princess Zelda",
+            "The main character wears a green tunic and cap",
+            "A golden triangle called the Triforce is central to the story"
+          ],
           answerType: "title"
         }
       ],
@@ -130,7 +310,11 @@ const gameData = {
           emojis: ["👦", "👧", "⚡", "🧙"],
           answer: "Harry Potter",
           artist: "",
-          hint: "This game is based on the wizard who lived",
+          hints: [
+            "This game is based on the wizard who lived",
+            "The main character has a lightning scar on his forehead",
+            "He attends Hogwarts School of Witchcraft and Wizardry"
+          ],
           answerType: "title"
         }
       ],
@@ -139,15 +323,16 @@ const gameData = {
           emojis: ["🌙", "👨", "🐺"],
           answer: "Bloodborne",
           artist: "",
-          hint: "This FromSoftware game is set in a Gothic, Victorian-inspired world",
+          hints: [
+            "This FromSoftware game is set in a Gothic, Victorian-inspired world",
+            "Players hunt beasts in the city of Yharnam",
+            "The game is known for its difficulty and lovecraftian themes"
+          ],
           answerType: "title"
         }
       ]
     }
   },
-  // ============================================================================
-  // ADD NEW GENRES HERE - FOLLOW THE SAME STRUCTURE
-  // ============================================================================
   movies: {
     name: "Movies",
     color: "#9C27B0",
@@ -157,7 +342,11 @@ const gameData = {
           emojis: ["🦁", "👑", "🌅"],
           answer: "The Lion King",
           artist: "",
-          hint: "This Disney movie features a young lion prince",
+          hints: [
+            "This Disney movie features a young lion prince",
+            "The villain is Scar, Simba's uncle",
+            "The song 'Circle of Life' opens the film"
+          ],
           answerType: "title"
         }
       ],
@@ -166,7 +355,11 @@ const gameData = {
           emojis: ["👨", "⚡", "🔨"],
           answer: "Thor",
           artist: "",
-          hint: "This Marvel superhero is based on Norse mythology",
+          hints: [
+            "This Marvel superhero is based on Norse mythology",
+            "He is the God of Thunder from Asgard",
+            "His weapon is Mjolnir, a magical hammer"
+          ],
           answerType: "title"
         }
       ],
@@ -175,7 +368,11 @@ const gameData = {
           emojis: ["👦", "🏃", "🌪️"],
           answer: "Forrest Gump",
           artist: "",
-          hint: "This movie follows a man with a low IQ who witnesses historical events",
+          hints: [
+            "This movie follows a man with a low IQ who witnesses historical events",
+            "He says 'Life is like a box of chocolates'",
+            "He becomes a ping pong champion and shrimp boat captain"
+          ],
           answerType: "title"
         }
       ]
@@ -190,7 +387,11 @@ const gameData = {
           emojis: ["🍕", "🇮🇹"],
           answer: "Pizza",
           artist: "",
-          hint: "This Italian dish is a worldwide favorite",
+          hints: [
+            "This Italian dish is a worldwide favorite",
+            "It typically has a dough base, tomato sauce, and cheese",
+            "Margherita is a classic variety"
+          ],
           answerType: "dish"
         }
       ],
@@ -199,7 +400,11 @@ const gameData = {
           emojis: ["🍣", "🇯🇵"],
           answer: "Sushi",
           artist: "",
-          hint: "This Japanese dish features vinegared rice and seafood",
+          hints: [
+            "This Japanese dish features vinegared rice and seafood",
+            "It often includes raw fish like tuna or salmon",
+            "Wasabi and soy sauce are common accompaniments"
+          ],
           answerType: "dish"
         }
       ],
@@ -208,7 +413,11 @@ const gameData = {
           emojis: ["🥘", "🇪🇸", "🥘"],
           answer: "Paella",
           artist: "",
-          hint: "This Spanish rice dish is often made with seafood or meat",
+          hints: [
+            "This Spanish rice dish is often made with seafood or meat",
+            "It originates from Valencia",
+            "Saffron gives it its distinctive yellow color"
+          ],
           answerType: "dish"
         }
       ]
@@ -223,7 +432,11 @@ const gameData = {
           emojis: ["👦", "🧙", "⚡"],
           answer: "Harry Potter",
           artist: "J.K. Rowling",
-          hint: "This book series features a young wizard at Hogwarts",
+          hints: [
+            "This book series features a young wizard at Hogwarts",
+            "The main villain is Lord Voldemort",
+            "The first book is 'The Philosopher's Stone'"
+          ],
           answerType: "title"
         }
       ],
@@ -232,7 +445,11 @@ const gameData = {
           emojis: ["🐭", "👨", "🏰"],
           answer: "Mickey Mouse",
           artist: "Walt Disney",
-          hint: "This iconic cartoon character was created in 1928",
+          hints: [
+            "This iconic cartoon character was created in 1928",
+            "He has a girlfriend named Minnie Mouse",
+            "He first appeared in 'Steamboat Willie'"
+          ],
           answerType: "character"
         }
       ],
@@ -241,7 +458,11 @@ const gameData = {
           emojis: ["👹", "🔔", "🏰"],
           answer: "The Hunchback of Notre Dame",
           artist: "Victor Hugo",
-          hint: "This novel is set in medieval Paris and features Quasimodo",
+          hints: [
+            "This novel is set in medieval Paris and features Quasimodo",
+            "The story takes place in and around Notre Dame Cathedral",
+            "Esmeralda is the gypsy girl Quasimodo loves"
+          ],
           answerType: "title"
         }
       ]
@@ -263,7 +484,8 @@ let gameState = {
   skippedQuestions: 0,
   currentQuestions: [],
   pointsPerQuestion: 10,
-  isAnswerRevealed: false
+  isAnswerRevealed: false,
+  currentQuestionHints: 0 // Track hints used for current question
 };
 
 let gameSettings = {
@@ -635,6 +857,7 @@ function startGame(genreKey) {
   gameState.skippedQuestions = 0;
   gameState.currentQuestions = [...gameData[genreKey].questions[gameState.currentDifficulty]];
   gameState.isAnswerRevealed = false;
+  gameState.currentQuestionHints = 0;
   
   // Set points based on difficulty
   updatePointsPerQuestion();
@@ -691,6 +914,9 @@ function updatePointsPerQuestion() {
 function loadQuestion() {
   const currentQuestionData = gameState.currentQuestions[gameState.currentQuestionIndex];
   
+  // Reset hints for this question
+  gameState.currentQuestionHints = 0;
+  
   // Clear previous emojis
   emojiDisplay.innerHTML = '';
   
@@ -706,16 +932,21 @@ function loadQuestion() {
   currentQuestion.textContent = `Question ${gameState.currentQuestionIndex + 1} of 10`;
   questionPoints.textContent = `${gameState.pointsPerQuestion} points`;
   
-  // Update answer type hint for music questions
+  // Update answer type hint with clear instructions
   if (gameState.currentGenre === 'music') {
     const typeHints = {
-      'song': '(Song Name)',
-      'artist': '(Artist Name)',
-      'both': '(Song & Artist)'
+      'song': '(Type Song Name Only)',
+      'artist': '(Type Artist Name Only)',
+      'both': '(Type Song AND Artist)'
     };
     answerTypeHint.textContent = typeHints[currentQuestionData.answerType] || '';
   } else {
-    answerTypeHint.textContent = '';
+    const typeHints = {
+      'title': '(Title Only)',
+      'character': '(Character Name)',
+      'dish': '(Food/Dish Name)'
+    };
+    answerTypeHint.textContent = typeHints[currentQuestionData.answerType] || '';
   }
   
   // Clear input and hint
@@ -779,7 +1010,7 @@ function checkAnswer() {
 }
 
 /**
- * Show feedback for correct answer
+ * Show feedback for correct answer - FIXED VERSION
  */
 function showFeedback(isCorrect, questionData) {
   // Set feedback content
@@ -787,24 +1018,35 @@ function showFeedback(isCorrect, questionData) {
     feedbackTitle.textContent = "Correct!";
     feedbackTitle.style.color = "#4CAF50";
     
-    if (gameState.currentGenre === 'music' && questionData.answerType === 'both') {
-      feedbackText.innerHTML = `Perfect!<br>Song: "${questionData.answer}"<br>Artist: ${questionData.artist}`;
-    } else if (gameState.currentGenre === 'music' && questionData.answerType === 'artist') {
-      feedbackText.innerHTML = `Correct!<br>Artist: ${questionData.artist}`;
-    } else if (gameState.currentGenre === 'music') {
-      feedbackText.innerHTML = `Correct!<br>Song: "${questionData.answer}"<br>Artist: ${questionData.artist}`;
-    } else {
-      feedbackText.textContent = `The answer is "${questionData.answer}"`;
+    // Build the feedback text safely
+    let feedbackHTML = `The answer is "${questionData.answer}"`;
+    
+    // Only add artist if it exists and is not empty
+    if (questionData.artist && questionData.artist.trim() !== "") {
+      if (gameState.currentGenre === 'music' && questionData.answerType === 'both') {
+        feedbackHTML = `Perfect!<br>Song: "${questionData.answer}"<br>Artist: ${questionData.artist}`;
+      } else if (gameState.currentGenre === 'music' && questionData.answerType === 'artist') {
+        feedbackHTML = `Correct!<br>Artist: ${questionData.artist}`;
+      } else if (gameState.currentGenre === 'music') {
+        feedbackHTML = `Correct!<br>Song: "${questionData.answer}"<br>Artist: ${questionData.artist}`;
+      }
     }
     
+    feedbackText.innerHTML = feedbackHTML;
     feedbackEmoji.innerHTML = "🎉🥳👏";
   } else {
     feedbackTitle.textContent = "Not Quite!";
     feedbackTitle.style.color = "#F44336";
-    feedbackText.textContent = `The correct answer is "${questionData.answer}"`;
-    if (questionData.artist) {
-      feedbackText.innerHTML += `<br><br>Artist: ${questionData.artist}`;
+    
+    // Build the feedback text safely
+    let feedbackHTML = `The correct answer is "${questionData.answer}"`;
+    
+    // Only add artist if it exists and is not empty
+    if (questionData.artist && questionData.artist.trim() !== "") {
+      feedbackHTML += `<br><br>Artist: ${questionData.artist}`;
     }
+    
+    feedbackText.innerHTML = feedbackHTML;
     feedbackEmoji.innerHTML = "😕🤔💡";
   }
   
@@ -823,7 +1065,7 @@ function showFeedback(isCorrect, questionData) {
 }
 
 /**
- * Show feedback for wrong answer with try again option
+ * Show feedback for wrong answer with try again option - FIXED VERSION
  */
 function showTryAgainFeedback(questionData) {
   feedbackTitle.textContent = "Not Quite Right!";
@@ -850,16 +1092,21 @@ function showTryAgainFeedback(questionData) {
     feedbackTitle.textContent = "Answer Revealed";
     feedbackTitle.style.color = "#9E9E9E";
     
-    if (gameState.currentGenre === 'music' && questionData.answerType === 'both') {
-      feedbackText.innerHTML = `Song: "${questionData.answer}"<br>Artist: ${questionData.artist}`;
-    } else if (gameState.currentGenre === 'music' && questionData.answerType === 'artist') {
-      feedbackText.innerHTML = `Artist: ${questionData.artist}`;
-    } else if (gameState.currentGenre === 'music') {
-      feedbackText.innerHTML = `Song: "${questionData.answer}"<br>Artist: ${questionData.artist}`;
-    } else {
-      feedbackText.textContent = `The answer is "${questionData.answer}"`;
+    // Build the feedback text safely
+    let feedbackHTML = `The answer is "${questionData.answer}"`;
+    
+    // Only add artist if it exists and is not empty
+    if (questionData.artist && questionData.artist.trim() !== "") {
+      if (gameState.currentGenre === 'music' && questionData.answerType === 'both') {
+        feedbackHTML = `Song: "${questionData.answer}"<br>Artist: ${questionData.artist}`;
+      } else if (gameState.currentGenre === 'music' && questionData.answerType === 'artist') {
+        feedbackHTML = `Artist: ${questionData.artist}`;
+      } else if (gameState.currentGenre === 'music') {
+        feedbackHTML = `Song: "${questionData.answer}"<br>Artist: ${questionData.artist}`;
+      }
     }
     
+    feedbackText.innerHTML = feedbackHTML;
     feedbackEmoji.innerHTML = "👁️🗨️✅";
     
     // Replace buttons with next button
@@ -892,15 +1139,23 @@ function giveHint() {
     return;
   }
   
-  // Get hint for current question
+  // Get current question data
   const currentQuestionData = gameState.currentQuestions[gameState.currentQuestionIndex];
-  hintText.textContent = `Hint: ${currentQuestionData.hint}`;
+  
+  // Show appropriate hint based on how many have been used for this question
+  gameState.currentQuestionHints++;
+  
+  if (gameState.currentQuestionHints <= currentQuestionData.hints.length) {
+    hintText.textContent = `Hint ${gameState.currentQuestionHints}: ${currentQuestionData.hints[gameState.currentQuestionHints - 1]}`;
+  } else {
+    hintText.textContent = "No more hints for this question!";
+  }
   
   // Update hint count
   gameState.hintsUsed++;
   updateStats();
   
-  // Disable button if no hints left
+  // Disable button if no hints left overall
   if (gameState.hintsUsed >= gameState.totalHints) {
     hintButton.disabled = true;
   }
@@ -909,7 +1164,7 @@ function giveHint() {
 }
 
 /**
- * Skip the current question
+ * Skip the current question - FIXED VERSION
  */
 function skipQuestion() {
   // Update skipped count
@@ -920,16 +1175,21 @@ function skipQuestion() {
   feedbackTitle.textContent = "Question Skipped";
   feedbackTitle.style.color = "#FF9800";
   
-  if (gameState.currentGenre === 'music' && currentQuestionData.answerType === 'both') {
-    feedbackText.innerHTML = `Song: "${currentQuestionData.answer}"<br>Artist: ${currentQuestionData.artist}`;
-  } else if (gameState.currentGenre === 'music' && currentQuestionData.answerType === 'artist') {
-    feedbackText.innerHTML = `Artist: ${currentQuestionData.artist}`;
-  } else if (gameState.currentGenre === 'music') {
-    feedbackText.innerHTML = `Song: "${currentQuestionData.answer}"<br>Artist: ${currentQuestionData.artist}`;
-  } else {
-    feedbackText.textContent = `The answer was "${currentQuestionData.answer}"`;
+  // Build the feedback text safely
+  let feedbackHTML = `The answer was "${currentQuestionData.answer}"`;
+  
+  // Only add artist if it exists and is not empty
+  if (currentQuestionData.artist && currentQuestionData.artist.trim() !== "") {
+    if (gameState.currentGenre === 'music' && currentQuestionData.answerType === 'both') {
+      feedbackHTML = `Song: "${currentQuestionData.answer}"<br>Artist: ${currentQuestionData.artist}`;
+    } else if (gameState.currentGenre === 'music' && currentQuestionData.answerType === 'artist') {
+      feedbackHTML = `Artist: ${currentQuestionData.artist}`;
+    } else if (gameState.currentGenre === 'music') {
+      feedbackHTML = `Song: "${currentQuestionData.answer}"<br>Artist: ${currentQuestionData.artist}`;
+    }
   }
   
+  feedbackText.innerHTML = feedbackHTML;
   feedbackEmoji.innerHTML = "⏭️➡️👀";
   
   // Create next button
