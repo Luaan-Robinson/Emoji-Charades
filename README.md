@@ -1,10 +1,5 @@
 Emoji Charades BETA 🎮
 <div align="center">
-
-https://img.shields.io/badge/Emoji-Charades-FFD700?style=for-the-badge&logo=gamepad&logoColor=white
-https://img.shields.io/badge/BETA-Unlimited%2520Hints!-6b46c1?style=for-the-badge
-https://img.shields.io/badge/License-MIT-green?style=for-the-badge
-
 Guess the answer from emoji clues!
 A fun, interactive web game where players decipher emoji puzzles across multiple genres
 
