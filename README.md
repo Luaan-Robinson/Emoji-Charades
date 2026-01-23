@@ -5,8 +5,10 @@ A fun, interactive web game where players decipher emoji puzzles across multiple
 
 Play Now • Features • How to Play
 </div>
-🚀 Quick Start
+Screenshots:
+Homescreen:
 <img width="1184" height="882" alt="image" src="https://github.com/user-attachments/assets/db5e0ef6-c593-4e45-81a8-e81034b21387" />
+Gameplay:
 <img width="1187" height="842" alt="image" src="https://github.com/user-attachments/assets/affd75d9-0564-4e7e-9d83-461e587842f5" />
 
 
